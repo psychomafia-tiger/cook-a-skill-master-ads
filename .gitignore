@@ -1,0 +1,18 @@
+# === OS generated files ===
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# === Environment & secrets ===
+.env
+.env.*
+*.key
+
+# === Node.js (for future scripts) ===
+node_modules/
+
+# === Logs ===
+*.log
+
+# === ClawHub local cache ===
+.clawhub/
