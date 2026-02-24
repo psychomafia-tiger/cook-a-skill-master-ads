@@ -55,7 +55,9 @@ Before generating ANY output, ask all 4 core questions below. IF the spec is mis
 **Q2 — Budget & Timeline:**
 "What budget can you allocate for this campaign? And how long do you plan to run it?
 (A) 7 days  (B) 14 days  (C) 30 days  (D) Ongoing
-(VND or USD accepted)"
+(USD accepted)"
+
+VALIDATION: Q2 requires BOTH a budget amount AND a timeline. IF the user's reply contains only one part (e.g., only "$1,000" with no timeline, or only "(B)" with no budget) → ask for the missing part before proceeding. Do not assume or default either value.
 
 **Q3 — Existing Assets:**
 "What does your team currently have?
@@ -83,7 +85,7 @@ Score the spec using this rubric:
 - Total scale: 10
 
 Actions by score:
-- IF score 8–10 → proceed, generate full output.
+- IF score 8–10 → proceed, generate full output. Still apply ⚠️ ASSUMPTION flags wherever any field is missing or vague (per Section 6).
 - IF score 5–7 → proceed, but flag EVERY assumption with `⚠️ ASSUMPTION:` prefix where data is missing or vague.
 - IF score < 5 → STOP. List each missing/vague field with its individual score. Request the user to provide additions before proceeding. Generate nothing else.
 
@@ -125,7 +127,7 @@ Assign exactly 1 format to each hook per this mapping:
 | Social Proof Hook | Video 15s |
 | Controversy Hook | Static Ad |
 
-IF Q4 = B (team cannot shoot video) → replace ALL Video formats with Static Ad.
+IF Q4 = B (team cannot shoot video) → replace ALL Video formats with Static Ad. When this results in multiple Static Ad variants, differentiate each by emphasizing its unique hook type in the headline and image direction — no two Static Ads should feel interchangeable.
 
 ### Step 5 — TA Derivation
 
@@ -151,23 +153,35 @@ IF product targets minors (< 18) → ASK user for confirmation before applying T
 
 ### Step 6 — Budget Planning
 
-- Daily budget = total budget from Q2 / number of days from Q2
-- IF timeline ≥ 14 days → select ABO (Ad Set Budget Optimization)
-- IF timeline < 14 days → select CBO (Campaign Budget Optimization)
+Budget calculation:
+- IF Q2 specifies a fixed timeline → Daily budget = total budget / number of days.
+- IF Q2 = D (Ongoing) → require user to specify a monthly budget. Daily budget = monthly budget / 30. Use ABO. Set a 30-day review cycle.
+- IF timeline ≥ 14 days → select ABO (Ad Set Budget Optimization).
+- IF timeline < 14 days → select CBO (Campaign Budget Optimization).
 
-Split budget across 3 ad sets:
-- Broad Test: age range + market, no interest targeting
-- Interest Stack: Layer 1 + Layer 2 interests
-- Lookalike 1% (if data available) OR Broad Interest using Layer 3 behavioral (if not yet launched)
+Split budget across ad sets using these default ratios:
+- Broad Test: 40% — age range + market, no interest targeting
+- Interest Stack: 35% — Layer 1 + Layer 2 interests
+- Lookalike 1% (if data available) OR Broad Interest using Layer 3 behavioral (if not yet launched): 25%
 
-Suggest appropriate CPA range based on product_category using this benchmark (VN 2025–2026):
+IF daily budget per ad set < target CPA × 10 → reduce to 2 ad sets (60% / 40%), and flag: "⚠️ Budget may be insufficient for 3 ad sets to exit learning phase. Consolidating to 2 ad sets."
 
-| Category | Estimated CPA (VND) |
+IF total budget < $500/week → use only 2 ad sets: Interest Stack 60% / Broad Test 40%. Drop Lookalike/Broad 2.
+
+Suggest appropriate CPA range based on product_category using this benchmark (USD, 2025–2026):
+
+| Category | Estimated CPA (USD) |
 |---|---|
-| SaaS / App | 50K–200K/lead |
-| E-commerce (orders) | 30K–100K/purchase |
-| Service / Booking | 80K–300K/lead |
-| Education / Course | 100K–500K/lead |
+| SaaS / App | $2–$8/lead |
+| E-commerce (orders) | $1–$4/purchase |
+| Service / Booking | $3–$12/lead |
+| Education / Course | $4–$20/lead |
+| App Install | $1–$5/install |
+| Health / Beauty / Wellness | $3–$10/lead |
+
+IF product_category does not match any row exactly → map to the closest category and flag with ⚠️ ASSUMPTION.
+
+IF budget currency does not match the table above → convert using approximate market rate and flag with ⚠️ ASSUMPTION.
 
 ### Step 7 — Output Assembly
 
@@ -287,14 +301,16 @@ Phase 2 teaser: After 14 days of data → transition to retargeting custom audie
 
 ```
 BUDGET PLAN — <product_name> — <timeline>
-Total budget: <from_Q2> | Daily budget: <total/days>
+Total budget: <from_Q2> | Daily budget: <total/days OR monthly/30 if Q2=D>
 Campaign Type: <ABO or CBO>
 
-| Ad Set | Audience | Budget/Day | Purpose |
+| Ad Set | Audience | Budget Split | Purpose |
 |---|---|---|---|
-| Broad Test | <age_range>, <market>, no interest | <X>% | Let Meta find audiences |
-| Interest Stack | Layer 1+2 | <X>% | Validate hypothesis |
-| LAL 1% / Broad Interest 2 | <source or Layer 3 behavioral> | <X>% | Warm-ish cold audience |
+| Broad Test | <age_range>, <market>, no interest | 40% | Let Meta find audiences |
+| Interest Stack | Layer 1+2 | 35% | Validate hypothesis |
+| LAL 1% / Broad Interest 2 | <source or Layer 3 behavioral> | 25% | Warm-ish cold audience |
+
+⚠️ IF budget too low for 3 ad sets (daily/ad set < CPA × 10) → consolidate to 2 ad sets: Interest Stack 60% / Broad Test 40%.
 
 Learning Phase: Each ad set needs ~50 conversions/week to exit learning phase.
 Min budget/ad set = target CPA × 2 / day.
@@ -303,6 +319,10 @@ Scale Trigger: When 1 ad set achieves CPA ≤ target for 3 consecutive days → 
 ```
 
 ### 5G — Revenue Projection
+
+Select the correct projection model based on Q1:
+
+**IF Q1 = C (Purchase / Conversion):**
 
 ```
 REVENUE PROJECTION — <product_name> — <timeline>
@@ -316,14 +336,91 @@ Estimated leads: <budget/cpa_mid> (expected)
 | Worst | <budget/cpa_high> | 1% | <leads×0.01> | <purchases×pricing> | <revenue/budget> |
 
 Breakeven: ~Day <calculated> (Expected case)
+```
+
+**IF Q1 = B (Lead Generation):**
+
+```
+REVENUE PROJECTION — <product_name> — <timeline>
+Budget: <budget> | CPL target: <cpl_mid>
+Estimated leads: <budget/cpl_mid> (expected)
+
+| Scenario | Leads | Lead-to-Customer Rate | Customers | LTV/Customer | Projected Revenue | ROAS |
+|---|---|---|---|---|---|---|
+| Best | <budget/cpl_low> | <rate_high>% | <leads×rate> | <ltv> | <customers×ltv> | <revenue/budget> |
+| Expected | <budget/cpl_mid> | <rate_mid>% | <leads×rate> | <ltv> | <customers×ltv> | <revenue/budget> |
+| Worst | <budget/cpl_high> | <rate_low>% | <leads×rate> | <ltv> | <customers×ltv> | <revenue/budget> |
+
+Breakeven: ~Day <calculated> (Expected case, based on LTV realization timeline)
+```
+
+**IF Q1 = A (Awareness):**
+
+```
+REACH & IMPRESSION ESTIMATE — <product_name> — <timeline>
+Budget: <budget> | Estimated CPM: <cpm_estimate>
+
+| Scenario | Impressions | Reach (est.) | Frequency | CPM |
+|---|---|---|---|---|
+| Best | <budget/cpm_low×1000> | <reach_high> | <imp/reach> | <cpm_low> |
+| Expected | <budget/cpm_mid×1000> | <reach_mid> | <imp/reach> | <cpm_mid> |
+| Worst | <budget/cpm_high×1000> | <reach_low> | <imp/reach> | <cpm_high> |
+
+⚠️ Awareness campaigns are measured by reach and frequency, not direct revenue.
+```
+
+**IF Q1 = D (App Install):**
+
+```
+APP INSTALL PROJECTION — <product_name> — <timeline>
+Budget: <budget> | CPI target: <cpi_mid>
+Estimated installs: <budget/cpi_mid> (expected)
+
+| Scenario | Installs | D7 Retention | Active Users (D7) | In-App Revenue/User | Projected Revenue | ROAS |
+|---|---|---|---|---|---|---|
+| Best | <budget/cpi_low> | <retention_high>% | <installs×retention> | <arpu> | <active×arpu> | <revenue/budget> |
+| Expected | <budget/cpi_mid> | <retention_mid>% | <installs×retention> | <arpu> | <active×arpu> | <revenue/budget> |
+| Worst | <budget/cpi_high> | <retention_low>% | <installs×retention> | <arpu> | <active×arpu> | <revenue/budget> |
+
+Breakeven: ~Day <calculated> (Expected case, based on ARPU realization timeline)
+⚠️ App installs require D7/D30 retention tracking. CPI alone does not indicate campaign success.
+```
+
 ⚠️ Note: Phase 1 typically runs at a loss; the goal is to buy audience data, not achieve positive ROI.
 ⚠️ Figures are estimates based on industry benchmarks; actual results depend on creative quality and landing page.
-```
 
 ### 5H — A/B Test Roadmap
 
+Select the roadmap that matches the campaign timeline from Q2:
+
+**IF timeline ≤ 13 days (Sprint):**
+
 ```
-A/B TEST ROADMAP — <product_name>
+A/B TEST ROADMAP — <product_name> — Sprint (≤13 days)
+
+DAY 1–2 — Hook Test:
+  Run ALL hook variants in parallel, same audience, same budget per variant.
+  Decision metric: CTR.
+
+DAY 3 — First Kill:
+  Kill any variant with CTR < 1%. Reallocate budget to survivors.
+
+DAY 4–5 — Winner Confirmation:
+  Monitor CPA of surviving variants.
+  Pick winner combo (best CTR + lowest CPA).
+
+DAY 6–7 — All-In:
+  Push full budget to winner variant + best audience.
+  Collect conversion data for Phase 2 planning.
+
+KILL CRITERIA: CTR < 1% after 2 days → kill. CPA > 2× target after 3 days → kill.
+⚠️ Short timelines cannot fully exit learning phase. Goal: identify best creative, not optimize CPA.
+```
+
+**IF timeline 14–30 days (Standard):**
+
+```
+A/B TEST ROADMAP — <product_name> — Standard (14–30 days)
 
 WEEK 1 — Hook Test:
   Run <N> hook variants in parallel, same audience, same budget per variant.
@@ -350,10 +447,48 @@ KILL CRITERIA (apply every week):
   Frequency > 3.0 → audience saturated, kill or expand.
 ```
 
-### 5I — Decision Tree
+**IF Q2 = D (Ongoing):**
 
 ```
-DECISION TREE — <product_name>
+A/B TEST ROADMAP — <product_name> — Ongoing (rolling 30-day cycles)
+
+CYCLE 1 (Day 1–30): Same as Standard roadmap (Week 1–4 above).
+CYCLE 2 (Day 31–60):
+  Refresh creatives: new hooks based on Cycle 1 winner insights.
+  Build retargeting audiences from Cycle 1 data.
+  Test retargeting vs prospecting budget split (start 70/30 prospecting-heavy).
+CYCLE 3+ (Day 61+):
+  Monthly creative refresh. Scale winners from previous cycle.
+  Shift budget toward retargeting as audience data grows.
+  Review and update TA settings every 30 days based on Ads Manager data.
+
+KILL CRITERIA: Same as Standard. Additionally: Frequency > 3.0 within a cycle → refresh creative immediately.
+```
+
+### 5I — Decision Tree
+
+Select the decision tree that matches the campaign timeline from Q2:
+
+**IF timeline ≤ 13 days (Sprint):**
+
+```
+DECISION TREE — <product_name> — Sprint
+
+| Day | Check | IF... | Action |
+|---|---|---|---|
+| 1–2 | — | — | Learning phase, observe only |
+| 3 | CTR | < 1% | Kill variant, reallocate budget to survivors |
+| 3 | CPA | CTR ok but CPA high | Check landing page, do not touch ads |
+| 3 | Both | CTR ok + CPA ok | Continue, mark as potential winner |
+| 5 | CPA | 1 variant ≤ target | Go all-in on winner for remaining days |
+| 5 | CPA | All > target | Pick lowest CPA variant, go all-in, accept learning cost |
+| 7 | — | Campaign ends | Document winners + learnings for next campaign |
+```
+
+**IF timeline 14–30 days (Standard):**
+
+```
+DECISION TREE — <product_name> — Standard
 
 | Day | Check | IF... | Action |
 |---|---|---|---|
@@ -368,6 +503,14 @@ DECISION TREE — <product_name>
 | 14 | CPA | No winner | Pause, review product-market fit |
 | 14 | CPA | Fluctuating | Run 7 more days with same setup |
 | 21–30 | Scale | Winners identified | Scale + build retargeting audiences (Phase 2 prep) |
+```
+
+**IF Q2 = D (Ongoing):**
+
+Use Standard decision tree for each 30-day cycle. At end of each cycle, add:
+
+```
+| Day 30 | Cycle review | — | Document winners. Refresh creatives. Update TA. Start next cycle. |
 ```
 
 ---

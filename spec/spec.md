@@ -76,7 +76,7 @@ landing_page_url or brand_name, the skill may ask up to
 > "What budget can you allocate for this campaign?
 > And how long do you plan to run it?
 > (A) 7 days  (B) 14 days  (C) 30 days  (D) Ongoing
-> (VND or USD accepted)"
+> (USD accepted)"
 → Q2 data feeds directly into Section 8
   Budget Plan: Daily budget = total budget / Q2 days.
 
@@ -332,7 +332,7 @@ Budget Split
 
 | Ad Set | Audience | Budget/Day | Purpose |
 |---|---|---|---|
-| Broad Test | [age range], VN, No interest | [X]% | Let Meta find audiences |
+| Broad Test | [age range], [market], No interest | 40% | Let Meta find audiences |
 | Interest Stack | Layer 1+2 | [X]% | Validate hypothesis |
 | Lookalike 1% / Broad Interest 2 | Website visitors (if available) or Layer 3 behavioral (if not launched) | [X]% | Warm-ish cold audience |
 
@@ -349,14 +349,14 @@ When 1 ad set achieves CPA ≤ target for
 3 consecutive days → increase budget max 20%/day,
 never increase more than 20% at once to avoid resetting learning
 
-CPA Benchmark Reference (VN 2025–2026):
+CPA Benchmark Reference (USD, 2025–2026):
 
-| Product Category | Estimated CPA (VND) | Notes |
+| Product Category | Estimated CPA (USD) | Notes |
 |---|---|---|
-| SaaS / App | 50K–200K/lead | Depends on affordability |
-| E-commerce (orders) | 30K–100K/purchase | Depends on product price |
-| Service / Booking | 80K–300K/lead | Depends on complexity |
-| Education / Course | 100K–500K/lead | High-involvement |
+| SaaS / App | $2–$8/lead | Depends on pricing tier |
+| E-commerce (orders) | $1–$4/purchase | Depends on product price |
+| Service / Booking | $3–$12/lead | Depends on complexity |
+| Education / Course | $4–$20/lead | High-involvement |
 
 → Skill suggests appropriate CPA range based on product_category.
 
@@ -392,14 +392,14 @@ product_category → calculate 3 scenarios:
 **Example format:**
 ```
 REVENUE PROJECTION — [Product Name] — [timeline]
-Budget: 15,000,000 VND | CPA target: 100K
+Budget: $1,000 USD | CPL target: $6.67
 Estimated leads: 150 (expected)
 
 | Scenario | Leads | CVR | Purchases | Revenue | ROAS |
 |---|---|---|---|---|---|
-| Best     | 200   | 5%  | 10        | 5,000K  | 0.33 |
-| Expected | 150   | 3%  | 4–5       | 2,250K  | 0.15 |
-| Worst    | 75    | 1%  | 0–1       | 375K    | 0.03 |
+| Best     | 200   | 5%  | 10        | $2,990  | 2.99 |
+| Expected | 150   | 3%  | 4–5       | $1,194  | 1.19 |
+| Worst    | 75    | 1%  | 0–1       | $299    | 0.30 |
 
 Breakeven: ~Day 18 (Expected case)
 ⚠️ Note: Phase 1 typically runs at a loss; the goal is
