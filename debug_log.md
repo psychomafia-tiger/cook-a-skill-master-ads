@@ -422,7 +422,7 @@ Evidence: `screenshot_test_openclaw_skill/` · `live_test_on_openclaw_internal.m
 
 ---
 
-### ✅ BUG-14 — Live Verification: PASS (Confirmed across 2 product types)
+### ✅ BUG-14 — Live Verification: PASS (Confirmed across 2 product types, Tests 1 & 2)
 
 **Test 1 — NovaFlow AI (SaaS, fictional, `input-sample-ai.md`):**
 - Agent asked Q1–Q4 in one message and STOPPED. No premature output. ✅
@@ -436,15 +436,20 @@ Evidence: `screenshot_test_openclaw_skill/` · `live_test_on_openclaw_internal.m
 
 ---
 
-### 🔴 BUG-15 — Live Regression: STILL PRESENT ON VPS
+### ✅ BUG-15 — Live Closure: CLOSED (Test 3, patched VPS)
 
-**Test 1 + Test 2 — Both specs:**
+**Test 1 + Test 2 — Pre-fix (regression observed):**
 - Full campaign package delivered in one monolithic message. Tables rendered as raw pipe characters. Wall-of-text UX confirmed on both runs.
-- Screenshot evidence: `ss2-openclaw-test-output-2.png`
+- Root cause: VPS was running pre-fix SKILL.md (v0.4.0 FIX-B chunk intent but not enforced hard enough).
 
-**Root cause of regression:** BUG-15 fix (FIX-B, v0.4.0) was applied to local SKILL.md but **VPS was not re-deployed** with the patched file. VPS still running pre-fix version.
+**Test 3 — Post-redeploy (patched SKILL.md v1.0.0, forced 4-message protocol):**
+- Output correctly split into **4 sequential messages** with `[Message X/4]` headers.
+- Message boundaries matched spec: M1 = Scripts, M2 = TA Settings, M3 = Budget Plan, M4 = Playbook.
+- Progress handoff markers present at end of M1–M3.
+- BUG-15 symptom (monolithic wall-of-text) eliminated.
+- Screenshot evidence: `ai_showcase/live_test_openclaw_internal/ss3_livetest_output.2.png`
 
-**Status:** 🔴 Fix exists in repo — pending VPS re-deployment + re-test.
+**Status:** ✅ Closed on live [2026-02-25] — patched VPS, 4-message forced protocol verified.
 
 ---
 
@@ -455,11 +460,61 @@ Evidence: `screenshot_test_openclaw_skill/` · `live_test_on_openclaw_internal.m
 
 ---
 
-### Live Test — Findings Summary
+### Live Test — Findings Summary (Tests 1 & 2)
 
 | Item | Result | Status |
 |---|---|---|
 | BUG-14 — SaaS (Test 1) | Q1–Q4 gate holds | ✅ Closed |
 | BUG-14 — Beauty App (Test 2) | Q1–Q4 gate holds, Q4 domain-aware | ✅ Closed |
-| BUG-15 — Both tests | Wall of text persists on VPS (pre-fix) | 🔴 Re-deploy needed |
+| BUG-15 — Both tests | Wall of text persists on VPS (pre-fix) | ✅ Closed (Test 3) |
 | Gate C — Beauty App | Lifestyle Upgrade framing confirmed | ✅ Closed |
+
+---
+
+## 📅 [2026-02-25] Debug Session 5: BUG-15 Live Re-Test on Patched VPS
+
+### Context
+
+Re-deployed patched `SKILL.md` (v1.0.0, 531 lines) to OpenClaw VPS after implementing the **Forced 4-Message Protocol** (P0.0 patch). This session closes BUG-15 on live.
+
+**SKILL.md changes since last VPS deploy:**
+- BUG-15 upgrade: 3-message chunked delivery → **forced 4-message protocol** with hard enforcement (P0.0)
+  - Added explicit `[Message X/4]` headers per message
+  - Added pre-send self-check rule (do NOT merge cross-message content)
+  - Added anti-merge rule (do NOT combine M2 + M3 even if short)
+  - Added Q3=C conditional skip (skip M2 entirely, send one-line note)
+- Version bump: `1.0` → `1.0.0`
+
+---
+
+### ✅ BUG-15 — Live Re-Test: CLOSED
+
+**Evidence:** `ai_showcase/live_test_openclaw_internal/ss3_livetest_output.1.png` + `ss3_livetest_output.2.png`
+
+**Acceptance criteria — all PASS:**
+
+| Check | Result |
+|---|---|
+| Output split into exactly 4 messages | ✅ |
+| `[Message X/4]` headers present on all messages | ✅ |
+| M1 = Confirmation + Summary + Scripts boundary | ✅ |
+| M2 = TA Settings only boundary | ✅ |
+| M3 = Budget Plan only boundary | ✅ |
+| M4 = Post-Launch Playbook boundary | ✅ |
+| Progress handoff markers (`Scripts done...` / `TA done...` / `Budget done...`) | ✅ |
+| BUG-14 gate still holding on patched VPS | ✅ |
+| No missing sections after 4-way split | ✅ |
+
+**Final status:** BUG-15 ✅ Closed on live [2026-02-25].
+
+---
+
+### Debug Session 5 — Summary
+
+| Item | Status |
+|---|---|
+| BUG-15 VPS re-deploy | ✅ Done |
+| BUG-15 live smoke test | ✅ PASS |
+| BUG-15 evidence captured | ✅ 2 screenshots in ai_showcase/ |
+| BUG-14 regression check on patched VPS | ✅ No regression |
+| Documentation sync (P0.5) | ✅ Done |

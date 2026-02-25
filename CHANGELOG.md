@@ -8,11 +8,33 @@
 
 **End goal:** Any Creative Producer or Media Buyer invokes the skill → gets ad scripts (3+ variants), TA settings with reasoning, budget plan, and a 30-day post-launch playbook — no follow-up questions needed.
 
-**Current stage:** Spec Approved ✅ · Architecture Documented ✅ · SKILL.md Complete ✅ · 10/10 Tests Passing ✅ · Deployed on OpenClaw VPS ✅ · Debug Session 4 Complete ✅ · Live Test Session Complete ✅ (BUG-14 Closed · Gate C Closed) · Skill Card Created ✅ · **Pending: BUG-15 VPS Re-deploy · AI Showcase**
+**Current stage:** Spec Approved ✅ · Architecture Documented ✅ · SKILL.md Complete ✅ · 10/10 Tests Passing ✅ · Deployed on OpenClaw VPS ✅ · Debug Session 4–5 Complete ✅ · Live Test Session 3 Complete ✅ (BUG-14 Closed · BUG-15 Closed · Gate C Closed) · Skill Card Created ✅ · **Pending: AI Showcase Curation**
 
 ---
 
 ## PART 2 — CHANGELOG
+
+### [v0.6.0] - 2026-02-25
+
+#### ✅ Bug Closed (Live Verified)
+- **BUG-15: ✅ CLOSED on live** — Forced 4-Message Protocol (P0.0 patch) re-deployed to VPS. Test 3 confirmed: output splits into exactly 4 sequential messages with `[Message X/4]` headers, correct section boundaries (M1=Scripts, M2=TA, M3=Budget, M4=Playbook), and progress handoff markers. Wall-of-text symptom eliminated.
+
+#### 🛠 Updated
+- `SKILL.md` — BUG-15 fix upgraded from "3-message chunked delivery" to **Forced 4-Message Protocol**: explicit `[Message X/4]` headers, pre-send self-check rule, anti-merge rule, Q3=C conditional skip. Version remains 1.0.0. Line count: 528 → 531.
+- `live_test_on_openclaw_internal.md` — Test 3 section added: pre-fix vs post-redeploy comparison table, acceptance check results table, final status for all items.
+- `debug_log.md` — BUG-15 status updated (regression → closed). Debug Session 5 appended with closure evidence, acceptance criteria table, summary.
+- `CHANGELOG.md` — Current stage line updated; BUG-15 VPS Re-deploy moved from Pending → Recently Completed.
+
+#### 🧪 Live Test Results (Test 3 — OpenClaw VPS, patched v1.0.0)
+- **BUG-14: ✅ No regression** — Q1–Q4 gate still holds on patched VPS.
+- **BUG-15: ✅ CLOSED** — 4-message forced protocol verified in runtime behavior. `[Message 2/4]`, `[Message 3/4]`, `[Message 4/4]` markers visible in screenshots.
+- **Evidence:** `ai_showcase/live_test_openclaw_internal/ss3_livetest_output.1.png` + `ss3_livetest_output.2.png`
+
+#### 💡 Decisions Made
+- Forced 4-Message Protocol uses 5 enforcement mechanisms: NON-NEGOTIABLE label, explicit `[Message X/4]` headers, pre-send self-check, anti-merge rule, Q3=C conditional skip — stronger than original 3-message chunked delivery.
+- Line count accepted at 531 (31 over 500 target) — hard enforcement mechanisms justify the overhead; medium-risk cuts deferred.
+
+---
 
 ### [v0.5.0] - 2026-02-25
 
@@ -134,19 +156,20 @@
 
 | Task | Complexity | Status |
 |---|---|---|
-| Re-deploy patched SKILL.md to VPS → re-test BUG-15 | Easy | 🔴 Pending |
-| Create `ai-showcase/` folder with 3–5 screenshots | Medium | 🔴 Pending |
+| Curate `ai_showcase/` — add `prompt_highlights/` + index/captions | Medium | 🔴 Pending |
 
 ### ✅ Recently Completed
 
 | Task | Completed In | Notes |
 |---|---|---|
+| BUG-15 closed on live (4-message protocol verified) | v0.6.0 Live Test 3 | Forced 4-message protocol deployed + runtime verified |
+| SKILL.md Forced 4-Message Protocol (P0.0 patch) | v0.6.0 | 5 enforcement mechanisms, 528→531 lines |
 | Create `skill-card.md` (mandatory BGK deliverable) | v0.5.0 | Created + reviewed + overclaim fixes applied |
 | BUG-14 live verified — PASS | v0.5.0 Live Test | Confirmed on SaaS + Beauty App product types |
 | Gate C live verified — PASS | v0.5.0 Live Test | Lifestyle Upgrade framing confirmed on beauty output |
 | Cost table methodology added (skill-card + README) | v0.5.0 | Token counts from real VPS measurement |
 | Fix BUG-14: Agent skips Q1–Q4 gate on OpenClaw | v0.4.0 FIX-A | 3-layer enforcement |
-| Fix BUG-15: Wall-of-text output | v0.4.0 FIX-B | 3-message chunked delivery — awaiting VPS re-deploy |
+| Fix BUG-15: Wall-of-text output | v0.4.0 FIX-B | 3-message chunked delivery (upgraded to forced protocol in v0.6.0) |
 | Consolidate duplicate constraints (Section 6) | v0.4.0 FIX-C | 12 rules → 2 unique |
 | Optimize SKILL.md size | v0.4.0 FIX-D | 533 → 528 lines |
 | Rewrite README with FOMO psychology | v0.4.0 FIX-E | Conversion funnel structure |
@@ -155,8 +178,8 @@
 
 | Task | Complexity | Depends On |
 |---|---|---|
-| Re-deploy SKILL.md to VPS → verify BUG-15 fix live | Easy | — |
-| Prepare real-data demo (internal product spec) | Medium | BUG-15 re-tested |
+| Curate ai_showcase/ with prompt_highlights/ + captions index | Medium | BUG-15 closed ✅ |
+| Prepare real-data demo (internal product spec) | Medium | ai_showcase curated |
 | Submit Skill Card + AI Showcase before presenting | Easy | Both ready |
 | Present to Judge: introduce skill, live demo, Q&A | Medium | All above done |
 

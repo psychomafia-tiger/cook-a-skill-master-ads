@@ -97,4 +97,68 @@ The discovery from this live test directly informed the **Debug Session 4** fixe
 
 ---
 
-**Overall Status:** BUG-14 bulletproof across both product types. Gate C confirmed working. BUG-15 fix applied in repo (v0.4.0) but **pending live re-test** on VPS with patched SKILL.md.
+**Overall Status (Tests 1 & 2):** BUG-14 bulletproof across both product types. Gate C confirmed working. BUG-15 fix applied in repo (v0.4.0) but **pending live re-test** on VPS with patched SKILL.md.
+
+---
+
+## 5. Test 3 — BUG-15 Re-Test on Patched VPS (4-Message Protocol)
+
+**Date:** 2026-02-25 | **SKILL.md version:** 1.0.0 (531 lines, forced 4-message protocol, P0.0 patch)
+**Purpose:** Verify BUG-15 closure after re-deploying the patched SKILL.md to VPS.
+**Evidence:** `ai_showcase/live_test_openclaw_internal/ss3_livetest_output.1.png` · `ss3_livetest_output.2.png`
+**Note:** This test specifically targets the BUG-15 regression confirmed in Tests 1 & 2.
+
+---
+
+### Pre-fix vs Post-redeploy Comparison
+
+| Item | Pre-fix (Tests 1 & 2) | Post-redeploy (Test 3) |
+|---|---|---|
+| SKILL.md on VPS | Old version (v0.4.0 FIX-B, 3-message intent) | Patched v1.0.0 (forced 4-message protocol) |
+| Output format | Single monolithic message block | 4 sequential messages with `[Message X/4]` headers |
+| BUG-15 symptom | Wall of text + raw pipe tables | Not present — structured message boundaries |
+| Progress markers | Missing | Present (`Scripts done...`, `TA done...`, `Budget done...`) |
+
+---
+
+### Step 1: Spec Submission & Q1–Q4 Gate (Screenshot: `ss3_livetest_output.1.png`)
+
+- **Expected:** Agent reads spec → asks Q1–Q4 in one message → STOPS.
+- **Actual:** **BUG-14: ✅ PASS** — Q1–Q4 gate still holding on patched VPS. Agent correctly entered confirmation stage before proceeding to generation.
+
+---
+
+### Step 2: Output Generation — 4-Message Protocol Verification (Screenshot: `ss3_livetest_output.2.png`)
+
+- **Expected:** Output split into exactly 4 sequential messages with correct section boundaries.
+- **Actual:**
+
+**Acceptance Check Results:**
+
+| Check | Expected | Result |
+|---|---|---|
+| Message count | Exactly 4 sequential messages | ✅ PASS |
+| [Message X/4] headers | Present on every message | ✅ PASS — `[Message 2/4]`, `[Message 3/4]`, `[Message 4/4]` visible |
+| M1 boundary | Confirmation + summary + ad scripts | ✅ PASS |
+| M2 boundary | TA Settings only | ✅ PASS |
+| M3 boundary | Budget Plan only | ✅ PASS |
+| M4 boundary | Post-Launch Playbook | ✅ PASS |
+| Progress handoff markers | `📋 Scripts done...` / `📋 TA done...` / `📋 Budget done...` | ✅ PASS |
+| BUG-15 symptom (wall of text) | Not present | ✅ PASS — no monolithic single-message block |
+| Section continuity | No missing sections across split | ✅ PASS — all sections present |
+| Tables in Telegram UI | Readable (structured code blocks acceptable) | ✅ PASS — code-block format readable, much improved vs raw-pipe wall |
+
+---
+
+### Test 3 Final Status
+
+| Item | Result | Status |
+|---|---|---|
+| BUG-14 gate | Q1–Q4 gate holds on patched VPS | ✅ Closed |
+| BUG-15 closure | 4-message protocol enforced, wall-of-text eliminated | ✅ Closed |
+| 4-message boundary correctness | M1/M2/M3/M4 boundaries match spec | ✅ Verified |
+| Progress markers | All 3 handoff markers present | ✅ Verified |
+
+---
+
+**Final Overall Status:** BUG-14 ✅ Closed · BUG-15 ✅ Closed (live verified on patched VPS, Test 3) · Gate C ✅ Closed. All critical live verification milestones complete. Skill is ready for presentation.
