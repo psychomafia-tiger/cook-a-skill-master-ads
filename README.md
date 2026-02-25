@@ -39,6 +39,8 @@ See [examples/output-sample.md](examples/output-sample.md) for a full generated 
 | Claude 4.6 Sonnet | $0.1368 | $0.0210 | **$0.158** |
 | Claude 4.6 Opus | $0.2280 | $0.0350 | **$0.263** |
 
+*Token breakdown per run: ~45,000 input tokens (SKILL.md runtime) + ~600 tokens (product spec) + ~1,400 output tokens. Prices as of Feb 2026.*
+
 For context: a freelance Media Buyer charges $500–$2,000 for the same scope of work. This skill runs unlimited times for the cost of a single API call.
 
 Every campaign you plan manually is time you can't get back.
