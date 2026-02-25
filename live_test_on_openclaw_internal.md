@@ -105,7 +105,11 @@ The discovery from this live test directly informed the **Debug Session 4** fixe
 
 **Date:** 2026-02-25 | **SKILL.md version:** 1.0.0 (531 lines, forced 4-message protocol, P0.0 patch)
 **Purpose:** Verify BUG-15 closure after re-deploying the patched SKILL.md to VPS.
-**Evidence:** `ai_showcase/live_test_openclaw_internal/ss3_livetest_output.1.png` · `ss3_livetest_output.2.png`
+**Evidence:**
+- `ai_showcase/live_test_openclaw_internal/ss3_livetest_output.1.png` — Q1–Q4 gate (pre-generation stage)
+- `ai_showcase/live_test_openclaw_internal/ss3_livetest_output.2.png` — 4-message output overview
+- `ai_showcase/live_test_openclaw_internal/_ss3_chunks/` — 8 cropped chunk screenshots (`ss3_chunk_01.png` → `ss3_chunk_08.png`), each showing one message boundary or section in detail
+
 **Note:** This test specifically targets the BUG-15 regression confirmed in Tests 1 & 2.
 
 ---

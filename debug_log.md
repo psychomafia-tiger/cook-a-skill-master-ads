@@ -489,7 +489,10 @@ Re-deployed patched `SKILL.md` (v1.0.0, 531 lines) to OpenClaw VPS after impleme
 
 ### ✅ BUG-15 — Live Re-Test: CLOSED
 
-**Evidence:** `ai_showcase/live_test_openclaw_internal/ss3_livetest_output.1.png` + `ss3_livetest_output.2.png`
+**Evidence:**
+- `ai_showcase/live_test_openclaw_internal/ss3_livetest_output.1.png` — Q1–Q4 gate (pre-generation stage)
+- `ai_showcase/live_test_openclaw_internal/ss3_livetest_output.2.png` — 4-message output (overview)
+- `ai_showcase/live_test_openclaw_internal/_ss3_chunks/` — **granular per-message evidence** (8 cropped chunks: `ss3_chunk_01.png` → `ss3_chunk_08.png`) showing each message boundary, `[Message X/4]` headers, section content, and progress markers individually
 
 **Acceptance criteria — all PASS:**
 
