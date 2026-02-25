@@ -521,3 +521,19 @@ Re-deployed patched `SKILL.md` (v1.0.0, 531 lines) to OpenClaw VPS after impleme
 | BUG-15 evidence captured | ✅ 2 screenshots in ai_showcase/ |
 | BUG-14 regression check on patched VPS | ✅ No regression |
 | Documentation sync (P0.5) | ✅ Done |
+
+---
+
+## 📅 [2026-02-26] Maintenance: Section 6 False Claim Fix (P2 Sprint)
+
+**Type:** Documentation maintenance — no logic change, no regression risk.
+
+**Issue:** Section 6 "Pre-Output Safety Check" contained the note `"(not covered elsewhere)"` describing the two safety gates (minors + sensitive category). This claim was factually incorrect — both rules are already present in Step 5 (lines 182–183). The incorrect note created a misleading impression that Section 6 was the sole enforcement point.
+
+**Fix applied (`SKILL.md`, Section 6):**
+- Before: `"Before sending Message 1, verify these two gates (not covered elsewhere):"`
+- After: `"Before sending Message 1, verify these two gates (intentional safety redundancy with Step 5 — ensures these gates fire even under long-context drift):"`
+
+**Decision:** Keep both enforcement points (Step 5 + Section 6) as intentional defense-in-depth. Section 6 = last-mile guard immediately before output generation. Step 5 = early-pipeline catch during TA derivation. Both serve different moments in the pipeline; duplication is justified for safety-critical gates on a platform where long-context drift is a real failure mode.
+
+**Version:** `SKILL.md` v1.0.0 — line count unchanged (text-only note edit).

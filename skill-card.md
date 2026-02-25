@@ -7,7 +7,7 @@
 > **For:** Creative Producers, Media Buyers, and Startup Founders running Meta Ads.
 
 ```
-Version: 1.0.0 | License: MIT | Tests: 10/10 Passing | Bugs: 15 found & fixed
+Version: 1.0.0 | License: MIT | Tests: 14 (12 behavior passing + 2 QA reviews) | Bugs: 15 found & fixed | Debug sessions: 5
 ```
 
 ---
@@ -37,13 +37,14 @@ Every new campaign starts the same way: a Creative Producer stares at a blank do
 
 ## What Gets Generated
 
-The skill outputs a campaign package in **3 sequential messages**:
+The skill outputs a campaign package in **4 sequential messages**:
 
 | Message | Contains |
 |---|---|
 | 📦 **Message 1** | Executive Summary + 3–5 Ad Script variants (Video 15s/30s, Static, Carousel — each with visuals, voiceover, hooks, production notes) |
-| 📦 **Message 2** | TA Settings (Demographics + 3-layer Interest Stack + Placements + Negatives) + Budget Plan (ABO/CBO + ad set split + CPA benchmarks) *(TA section skipped if user has existing TA — Q3=C)* |
-| 📦 **Message 3** | Revenue Projection (3 scenarios) + A/B Test Roadmap (timeline-adaptive: Sprint / Standard / Ongoing) + Decision Tree (day-by-day if/then actions) |
+| 📦 **Message 2** | TA Settings (Demographics + 3-layer Interest Stack + Placements + Negatives) *(skipped if user has existing TA — Q3=C)* |
+| 📦 **Message 3** | Budget Plan (ABO/CBO + ad set split + CPA benchmarks + consolidation logic) |
+| 📦 **Message 4** | Revenue Projection (3 scenarios) + A/B Test Roadmap (timeline-adaptive: Sprint / Standard / Ongoing) + Decision Tree (day-by-day if/then actions) |
 
 See [output-sample.md](examples/output-sample.md) for a fully realized 251-line example.
 
@@ -75,7 +76,7 @@ User answers Q1–Q4
        4. Script Assembly   →  5. TA Derivation
        6. Budget Planning   →  7. Output Assembly
        8. Post-Launch Playbook
-  ◀── 3 messages delivered sequentially
+  ◀── 4 messages delivered sequentially
   ✅ Execute.
 ```
 
@@ -86,7 +87,7 @@ User answers Q1–Q4
 ## Quality Engineering
 
 ```
-📊 Test cases: 10/10 passing | Bugs: 15 found & fixed | Debug sessions: 4
+📊 Test cases: 14 (12 behavior passing + 2 QA reviews) | Bugs: 15 found & fixed | Debug sessions: 5
    Edge cases: health/beauty, no-video, partial answers, ongoing budget,
    incomplete spec, awareness objective, app install, sprint timeline
 ```

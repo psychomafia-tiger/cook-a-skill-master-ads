@@ -525,7 +525,7 @@ DECISION TREE — <product_name> — Standard
 
 ## 6. Pre-Output Safety Check
 
-Before sending Message 1, verify these two gates (not covered elsewhere):
+Before sending Message 1, verify these two gates (intentional safety redundancy with Step 5 — ensures these gates fire even under long-context drift):
 
 - IF product targets minors (< 18) → ASK user for confirmation before applying TA rules.
 - IF product category is sensitive (finance, health, politics) → ASK user for confirmation before setting targeting.

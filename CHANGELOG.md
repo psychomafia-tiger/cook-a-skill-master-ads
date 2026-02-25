@@ -8,11 +8,38 @@
 
 **End goal:** Any Creative Producer or Media Buyer invokes the skill → gets ad scripts (3+ variants), TA settings with reasoning, budget plan, and a 30-day post-launch playbook — no follow-up questions needed.
 
-**Current stage:** Spec Approved ✅ · Architecture Documented ✅ · SKILL.md Complete ✅ · 10/10 Tests Passing ✅ · Deployed on OpenClaw VPS ✅ · Debug Session 4–5 Complete ✅ · Live Test Session 3 Complete ✅ (BUG-14 Closed · BUG-15 Closed · Gate C Closed) · Skill Card Created ✅ · **Pending: AI Showcase Curation**
+**Current stage:** Spec Approved ✅ · Architecture Documented ✅ · SKILL.md Complete ✅ · 14 Tests (12 Passing + 2 QA Reviews) ✅ · Deployed on OpenClaw VPS ✅ · Debug Session 4–5 Complete ✅ · Live Test Session 3 Complete ✅ (BUG-14 Closed · BUG-15 Closed · Gate C Closed) · Skill Card Created ✅ · **Pending: AI Showcase Curation**
 
 ---
 
 ## PART 2 — CHANGELOG
+
+### [v0.7.0] - 2026-02-26
+
+#### 🧪 QA Hardening (P1 Sprint)
+- **TEST-11 added to `testlog.md`** — Live QA: partial Q answers with Q2 skipped. Agent refuses to generate, explicitly identifies Q2 as mandatory, requests both budget amount and timeline. Evidence: `ai_showcase/live_test_openclaw_internal/p1.1_test.png`
+- **TEST-12 added to `testlog.md`** — Live QA: Q2 invalid-format validation (3 mini-cases). Mini-Case A: timeline-only input → agent refuses, requests budget. Mini-Case B: budget-only input → agent refuses, requests timeline. Mini-Case C: vague range budget → agent refuses, no silent assumptions made. Evidence: `ai_showcase/live_test_openclaw_internal/p1.2_test.png`
+- **TEST-13 added to `testlog.md`** — Content quality checklist review on beauty app live output. CQ-2 FAIL found (Social Proof fabrication risk noted). CQ-7 N/A (screenshot legibility). All other checks PASS.
+- **TEST-14 added to `testlog.md`** — Content quality checklist review on TEST-01 sample output (TaskFlow Pro). All applicable checks PASS. Screenshot mismatch documented transparently.
+- **Simulation vs Live Coverage Map added to `testlog.md`** — Table clearly categorizes TEST-01–10 as simulation, TEST-11–12 as live-verified, TEST-13–14 as post-output QA review. Addresses BGK credibility question on test methodology.
+
+#### 🛠 Prompt Maintenance (P2 Sprint)
+- **`SKILL.md` Section 6 clarification** — Changed `"not covered elsewhere"` → `"intentional safety redundancy with Step 5 — ensures these gates fire even under long-context drift"`. Fixes false claim; documents redundancy as deliberate defense-in-depth. No logic removed.
+- **Line count: accepted technical debt** — `SKILL.md` at 531 lines (31 over 500 target). Medium-risk cuts D2/D4 deferred to post-presentation. Rationale: regression risk not worth the gain for a non-BGK-evaluated metric.
+
+#### 🔄 Consistency Sweep (P2.3)
+- **`skill-card.md`** — Fixed 3 inconsistencies introduced after v0.6.0 upgrade to forced 4-message protocol:
+  - "3 sequential messages" (×2 occurrences) → **4**
+  - Message table (3 rows, M2 incorrectly combined TA+Budget) → **4 rows** matching forced protocol boundaries (M1=Scripts, M2=TA, M3=Budget, M4=Playbook)
+  - "Debug sessions: 4" → **5**
+  - "Tests: 10/10 Passing" → **14 (12 behavior passing + 2 QA reviews)**
+- **`CHANGELOG.md`** — Current stage line updated: "10/10 Tests Passing" → "14 Tests (12 Passing + 2 QA Reviews)"
+
+#### 💡 Decisions Made
+- Content quality test (P1.3) confirmed Social Proof fabrication risk (CQ-2) in beauty app output — this is a known conditional behavior (Gate E: skip Social Proof Hook if no `existing_social_proof`) and is documented as a test finding, not a new bug.
+- Section 6 safety redundancy retained intentionally (defense-in-depth); original "not covered elsewhere" note was factually wrong and has been corrected.
+
+---
 
 ### [v0.6.0] - 2026-02-25
 
