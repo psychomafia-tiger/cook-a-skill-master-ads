@@ -263,3 +263,149 @@ Section 6 says "ALWAYS flag assumptions wherever data is missing or vague." Thes
 | BUG-12 | SKILL.md | Section 3 (Q2) | VALIDATION note added: Q2 requires both budget + timeline; closes missing closing `"` too |
 | BUG-13 | SKILL.md | Step 1 | Score 8–10 branch now includes: "Still apply ⚠️ ASSUMPTION flags per Section 6" |
 | BUG-11 | output-sample.md | Entire file | ✅ Fixed — Full rewrite: Video 30s, 40/35/25→2 ad sets 60/40, Lead Gen model, all sections filled |
+
+---
+
+## 📅 [2026-02-25] Debug Session 4: OpenClaw Deployment Testing
+
+### Context
+
+Deployment method: Manual copy via folder transfer to OpenClaw running locally on a VPS (not via github/clawd cli).
+
+---
+
+### 🔴 BUG-14 (Prompt Adherence — High): Agent Skips Q1–Q4 on OpenClaw Deployment
+
+**Problem:** When testing the skill on the actual OpenClaw platform (using `input-sample-ai.md`), the agent ignored the strict instruction to ask questions 1–4 and wait for the user's reply. Instead, it proceeded straight to generating the campaign output using assumed or omitted values.
+
+**Root cause:** The "Ask & Wait" constraint is present in `SKILL.md` (Section 3 and Section 6), but the LLM powering OpenClaw is eagerly completing the task (likely due to seeing a fully-formed, rich spec). The instruction to "STOP and wait" is not strong enough to break the agent's default instruction-following momentum on a rich input.
+
+**Fix applied (2026-02-25):** 3-layer enforcement added to SKILL.md:
+
+- **Layer 1 — CRITICAL INSTRUCTION block** (lines 17–26): Added a blockquote immediately after the file title, before any section. States explicitly: "This skill is a multi-turn conversation, NOT a single-pass generator." Lists 4 steps the agent MUST follow: read spec → ask Q1–Q4 in one message → STOP → wait for all answers → then generate.
+- **Layer 2 — Quick Start Example** (lines 28–37): Added a concrete 4-turn conversation flow showing exactly what Turn 1–4 look like. Provides a positive pattern for the agent to mirror instead of relying only on rule-based prohibitions.
+- **Layer 3 — Common Mistakes** (lines 39–43): Added a "DO NOT do these" list with 3 specific wrong behaviors labeled **WRONG**: jumping to output on a rich spec, generating partial output while waiting, and assuming budget/timeline from spec data.
+- **Reinforcement — STRICT RULE** (line 103): Upgraded existing plain-text rule by adding ⛔ emoji, "STOP and WAIT" phrasing, explicit reference to "Section 4", and the phrase "non-negotiable".
+
+**Root cause addressed:** The original instruction ("STRICT RULE: Generate ONLY after ALL answers are received.") was a single line at the end of Section 3 — too easy to overlook when the agent sees a rich spec and defaults to task completion. The fix repositions enforcement to the very top of the file (highest attention priority) and adds pattern-based guidance to complement the rule-based prohibition.
+
+**Status:** ✅ Fixed [2026-02-25]
+
+---
+
+### 🟡 BUG-15 (UX — Medium): Output Renders as Wall of Text with Broken Tables
+
+**Problem:** When the agent generates the full campaign package in a single message, the output is a monolithic wall of text (~3,000+ tokens). Tables within the output (TA Interest Stack, Budget Plan, Revenue Projection, Decision Tree) render broken or unformatted in most chat UIs. Users cannot parse or copy individual sections easily.
+
+**Root cause:** Step 7 instructed the agent to "Begin the output with the Executive Summary. Then output all applicable sections in order" — implying a single continuous block. No guidance on message splitting or formatting boundaries.
+
+**Fix applied (2026-02-25):**
+- **Step 7 — Chunked Format instruction** (lines 225–238): Added mandatory 3-message delivery rule:
+  - Message 1: Executive Summary + ALL Ad Script variants (5A → 5B/5C/5D) → ends with `"📋 Scripts done. Sending TA & Budget next..."`
+  - Message 2: TA Settings + Budget Plan (5E → 5F) → ends with `"📋 TA & Budget done. Sending Playbook next..."`
+  - Message 3: Revenue Projection + A/B Roadmap + Decision Tree (5G → 5H → 5I) → ends with `"✅ Campaign package complete."`
+- **Quick Start Example** (lines 36–38): Updated Turn 4 → Turn 4/5/6 to show 3-message output pattern, consistent with chunked delivery.
+- **Q3=C handling**: Message 2 skips TA Settings but still sends as separate message (Budget Plan only).
+
+**Root cause addressed:** Single-message output caused chat UI rendering failures. Chunked delivery keeps each message under ~1,000 tokens, allowing tables to render correctly and giving users natural copy boundaries between sections.
+
+**Status:** ✅ Fixed [2026-02-25]
+
+---
+
+### FIX-C (Optimization): Section 6 Consolidated — 10 Duplicate Rules Removed
+
+**Problem:** Section 6 "Strict Constraints" contained 12 rules. 10 of them were exact duplicates of rules already stated in Steps 1–7, Section 3, and templates. Duplication wastes tokens (~150 tokens), creates inconsistency risk (updating one location but not the other), and adds no enforcement value.
+
+**Audit results:**
+
+| Section 6 Rule | Already Stated At | Duplicate? |
+|---|---|---|
+| Flag ⚠️ ASSUMPTION | Step 1 (L120-121), Step 6 (L214, L216) | ✅ |
+| A/B test note per variant | Template 5B (L289) | ✅ |
+| 3-angle reasoning for Tier 1 | Step 5 (L168), Template 5E (L326) | ✅ |
+| Budget from Q2 only | Step 6 context | ✅ |
+| Output after ALL Q1-Q4 | Critical Instruction (L23), STRICT RULE (L105) | ✅ ×3 |
+| Readiness Score ≥ 5 | Step 1 (L122) | ✅ |
+| Q1 objective = user choice | Section 3 Q1 (L80-85) | ✅ |
+| Social Proof Hook conditional | Step 3 (L143) | ✅ |
+| Production Notes Q3≠B | Step 7 (L222) | ✅ |
+| Health/beauty Lifestyle Upgrade | Step 3 (L146) | ✅ |
+| Minors < 18 confirmation | **Unique** | ❌ |
+| Sensitive category confirmation | **Unique** | ❌ |
+
+**Fix applied (2026-02-25):**
+- Removed all 10 duplicate rules from Section 6.
+- Renamed section: "6. Strict Constraints" → "6. Pre-Output Safety Check".
+- Retained 2 unique rules (minors + sensitive category) as the only content under Section 6.
+- Removed orphaned "per Section 6" reference in Step 1 (L120).
+- Net result: **-9 lines** (577 → 568).
+
+**Status:** ✅ Fixed [2026-02-25]
+
+---
+
+### FIX-D (Optimization): SKILL.md Line Reduction — Safe Group
+
+**Problem:** After FIX-A/B/C, SKILL.md was at 568 lines (68 over the 500-line recommendation). Feedback identified bloated sections that could be compacted without losing functional content.
+
+**Fix applied (2026-02-25) — safe-only cuts:**
+
+| ID | Target | Action | Lines Saved |
+|---|---|---|---|
+| D7 | YAML frontmatter | Removed empty `requires.env: []` | -2 |
+| D1 | 5H Ongoing variant | Collapsed 16-line code block → 1-line inline summary (content preserved) | -15 |
+| D3 | 5I Ongoing variant | Collapsed 7-line block → 1-line inline (content preserved) | -5 |
+| D5 | 5E TA Settings | Removed 1 unnecessary blank line before Phase 2 teaser | -1 |
+| D6 | 5F Budget Plan | Merged Learning Phase + Min budget + 7-day rule into 2 compact lines | -3 |
+| D8+ | 5G Revenue Projection | Removed blank lines inside code blocks (4 blocks × ~2 each) + merged 2 ⚠️ notes into 1 | -12 |
+| | | **Total** | **-40 lines** |
+
+**Result:** 568 → **528 lines** (28 over 500-line target — remaining gap requires medium-risk cuts D2/D4 which were intentionally deferred).
+
+**What was NOT cut (and why):**
+- D2 (merge Revenue Projection blocks): agent must parse branching inside a single template — risk of wrong model selection
+- D4 (compact Video 15s template): reduces template readability for marginal gain (~8 lines)
+
+**Status:** ✅ Fixed [2026-02-25]
+
+---
+
+### FIX-E (Documentation): README "Why This Skill Exists" Section
+
+**Problem:** README opened with "What It Does" — functional but flat. No business context, no urgency, no reason for a reader to stop scrolling. Feedback: "README nên mở đầu bằng business context."
+
+**Fix applied (2026-02-25):**
+- Added "Why This Skill Exists" section (lines 5–33) between tagline and "What It Does"
+- **Before/After table**: 4-row comparison showing manual time (2–3 days) vs skill time (< 2 minutes) — anchoring effect
+- **Cost per run table**: 5 models with exact token costs ($0.027–$0.263) — specificity builds trust
+- **Freelancer price contrast**: "$500–$2,000 for the same scope" vs $0.16 — price anchoring (6,250x cheaper)
+- **Loss aversion closer**: "Every campaign you plan manually is time you can't get back."
+- Behavioral psychology techniques used: anchoring, loss aversion, ego preservation ("time, not talent"), pattern interrupt ("That's not a typo")
+
+**Status:** ✅ Fixed [2026-02-25]
+
+---
+
+### Debug Session 4 — Issue Summary
+
+| Bug | Severity | File | Type | Status |
+|---|---|---|---|---|
+| BUG-14 | 🔴 High | SKILL.md | Prompt adherence — agent skips Q1–Q4 on rich spec input | ✅ Fixed — 3-layer enforcement added at top of file |
+| BUG-15 | 🟡 Medium | SKILL.md | UX — output wall of text, tables broken in chat | ✅ Fixed — 3-message chunked delivery in Step 7 |
+| FIX-C | 🟡 Optimization | SKILL.md | 10 duplicate rules in Section 6 wasting tokens + inconsistency risk | ✅ Fixed — consolidated to 2 unique rules |
+| FIX-D | 🟡 Optimization | SKILL.md | File too long (568 lines, target < 500) | ✅ Partial — 528 lines (-40), safe cuts only |
+| FIX-E | 🟢 Documentation | README.md | Missing business context + cost transparency | ✅ Fixed — "Why This Skill Exists" + cost table added |
+
+### Debug Session 4 — Fix History
+
+| Fix | File | Lines Changed | What Changed |
+|---|---|---|---|
+| BUG-14 | SKILL.md | Lines 17–44 (new) | CRITICAL INSTRUCTION block + Quick Start Example + Common Mistakes |
+| BUG-14 | SKILL.md | Line 103 (updated) | STRICT RULE strengthened: ⛔ emoji + "STOP and WAIT" + "non-negotiable" |
+| BUG-15 | SKILL.md | Lines 225–238 (new) | Chunked output: 3 sequential messages with preview lines |
+| BUG-15 | SKILL.md | Lines 36–38 (updated) | Quick Start Turn 4 → Turn 4/5/6 reflecting chunked delivery |
+| FIX-C | SKILL.md | Section 6 (rewritten) | 12 rules → 2 unique rules; renamed to "Pre-Output Safety Check"; -9 lines |
+| FIX-C | SKILL.md | Line 120 (updated) | Removed orphaned "per Section 6" reference |
+| FIX-D | SKILL.md | YAML, 5H, 5I, 5E, 5F, 5G | Safe-group compaction: -40 lines (568 → 528) |
+| FIX-E | README.md | Lines 5–33 (new) | "Why This Skill Exists" section: before/after table + cost table + FOMO framing |

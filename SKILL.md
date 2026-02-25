@@ -8,11 +8,41 @@ tags: ["meta-ads", "ad-scripts", "target-audience", "budget-planning", "campaign
 metadata:
   clawdbot:
     emoji: "🎯"
-    requires:
-      env: []
 ---
 
 # Meta Ads Script & TA Generator
+
+> **CRITICAL INSTRUCTION — READ BEFORE ANYTHING ELSE:**
+> This skill is a **multi-turn conversation**, NOT a single-pass generator.
+> When the user uploads a product spec, you MUST:
+> 1. Read the spec
+> 2. Ask Q1–Q4 (Section 3) in ONE message and **STOP**
+> 3. **WAIT** for the user's answers — do NOT generate any output yet
+> 4. Only after receiving ALL answers → proceed to Processing Steps (Section 4)
+>
+> **NEVER skip the questions, even if the spec is extremely detailed.**
+> The questions collect strategic decisions (objective, budget, timeline, assets, production capability) that CANNOT be inferred from the spec alone.
+
+### Quick Start — Expected Conversation Flow
+
+```
+Turn 1 — User: uploads product_spec.md
+Turn 2 — You:  "Thanks! I've read your spec. Before I generate, I need 4 quick answers:
+                Q1: [objective]  Q2: [budget & timeline]  Q3: [existing assets]  Q4: [production capability]"
+                ← STOP HERE. Do not write anything else.
+Turn 3 — User: answers Q1–Q4
+Turn 4 — You:  [Message 1: Executive Summary + Ad Scripts]  "📋 Scripts done. Sending TA & Budget next..."
+Turn 5 — You:  [Message 2: TA Settings + Budget Plan]       "📋 TA & Budget done. Sending Playbook next..."
+Turn 6 — You:  [Message 3: Playbook (Revenue + A/B + Decision Tree)]  "✅ Campaign package complete."
+```
+
+### Common Mistakes (DO NOT do these)
+
+- Seeing a rich spec and jumping straight to output generation — **WRONG**. Always ask Q1–Q4 first.
+- Generating partial output while waiting for answers — **WRONG**. Wait for ALL answers.
+- Assuming budget/timeline from spec data — **WRONG**. Q2 must be answered by the user.
+
+---
 
 ## 1. Role & Purpose
 
@@ -70,7 +100,7 @@ VALIDATION: Q2 requires BOTH a budget amount AND a timeline. IF the user's reply
 (A) Yes — video + static + carousel all feasible
 (B) No — only need static + carousel"
 
-STRICT RULE: Generate ONLY after ALL answers are received.
+⛔ STRICT RULE: After asking Q1–Q4, STOP and WAIT for the user's reply. Do NOT proceed to Section 4 or generate ANY output until ALL answers are received. This is non-negotiable.
 
 ## 4. Processing Steps
 
@@ -85,7 +115,7 @@ Score the spec using this rubric:
 - Total scale: 10
 
 Actions by score:
-- IF score 8–10 → proceed, generate full output. Still apply ⚠️ ASSUMPTION flags wherever any field is missing or vague (per Section 6).
+- IF score 8–10 → proceed, generate full output. Still apply ⚠️ ASSUMPTION flags wherever any field is missing or vague.
 - IF score 5–7 → proceed, but flag EVERY assumption with `⚠️ ASSUMPTION:` prefix where data is missing or vague.
 - IF score < 5 → STOP. List each missing/vague field with its individual score. Request the user to provide additions before proceeding. Generate nothing else.
 
@@ -190,7 +220,20 @@ Before generating the final output block, review Q3 answer:
 - IF Q3 = B → generate all sections, but SKIP detailed Production Notes within ad scripts.
 - IF Q3 = C → generate ad scripts + budget plan + playbook. SKIP TA Settings section entirely.
 
-Begin the output with the Executive Summary. Then output all applicable sections in order.
+**Output Delivery — Chunked Format (MANDATORY):**
+
+Do NOT output everything in 1 single message. Split the output into **3 sequential messages** to prevent wall-of-text and broken table rendering:
+
+| Message | Contains | End with |
+|---|---|---|
+| **Message 1** | Executive Summary + ALL Ad Script variants (5A → 5B/5C/5D) | `"📋 Scripts done. Sending TA & Budget next..."` |
+| **Message 2** | TA Settings + Budget Plan (5E → 5F) | `"📋 TA & Budget done. Sending Playbook next..."` |
+| **Message 3** | Revenue Projection + A/B Roadmap + Decision Tree (5G → 5H → 5I) | `"✅ Campaign package complete."` |
+
+Rules:
+- Each message must be self-contained and properly formatted.
+- Wait for the chat to render each message before sending the next (natural pacing, no rush).
+- IF Q3 = C (TA already set) → Message 2 skips TA Settings, contains only Budget Plan. Still send as a separate message.
 
 ### Step 8 — Post-Launch Playbook
 
@@ -293,7 +336,6 @@ INTEREST STACK (3 Layers — Tier 1):
 LOOKALIKE (Tier 2): <source_description + size OR broad_interest_fallback>
 PLACEMENTS (Tier 2): Advantage+ Placements. IF Awareness → manual Feed + Reels.
 NEGATIVE TARGETING: Exclude existing customers, competitors' employees, age < 18, unserviceable locations.
-
 Phase 2 teaser: After 14 days of data → transition to retargeting custom audiences.
 ```
 
@@ -311,11 +353,8 @@ Campaign Type: <ABO or CBO>
 | LAL 1% / Broad Interest 2 | <source or Layer 3 behavioral> | 25% | Warm-ish cold audience |
 
 ⚠️ IF budget too low for 3 ad sets (daily/ad set < CPA × 10) → consolidate to 2 ad sets: Interest Stack 60% / Broad Test 40%.
-
-Learning Phase: Each ad set needs ~50 conversions/week to exit learning phase.
-Min budget/ad set = target CPA × 2 / day.
-Do not modify ad sets in first 7 days to avoid resetting learning phase.
-Scale Trigger: When 1 ad set achieves CPA ≤ target for 3 consecutive days → increase budget max 20%/day.
+Learning Phase: ~50 conversions/week to exit. Min budget/ad set = CPA × 2/day. Do not modify first 7 days.
+Scale Trigger: CPA ≤ target for 3 consecutive days → increase budget max 20%/day.
 ```
 
 ### 5G — Revenue Projection
@@ -326,15 +365,12 @@ Select the correct projection model based on Q1:
 
 ```
 REVENUE PROJECTION — <product_name> — <timeline>
-Budget: <budget> | CPA target: <cpa_mid>
-Estimated leads: <budget/cpa_mid> (expected)
-
+Budget: <budget> | CPA target: <cpa_mid> | Estimated leads: <budget/cpa_mid> (expected)
 | Scenario | Leads | CVR | Purchases | Revenue | ROAS |
 |---|---|---|---|---|---|
 | Best | <budget/cpa_low> | 5% | <leads×0.05> | <purchases×pricing> | <revenue/budget> |
 | Expected | <budget/cpa_mid> | 3% | <leads×0.03> | <purchases×pricing> | <revenue/budget> |
 | Worst | <budget/cpa_high> | 1% | <leads×0.01> | <purchases×pricing> | <revenue/budget> |
-
 Breakeven: ~Day <calculated> (Expected case)
 ```
 
@@ -342,15 +378,12 @@ Breakeven: ~Day <calculated> (Expected case)
 
 ```
 REVENUE PROJECTION — <product_name> — <timeline>
-Budget: <budget> | CPL target: <cpl_mid>
-Estimated leads: <budget/cpl_mid> (expected)
-
+Budget: <budget> | CPL target: <cpl_mid> | Estimated leads: <budget/cpl_mid> (expected)
 | Scenario | Leads | Lead-to-Customer Rate | Customers | LTV/Customer | Projected Revenue | ROAS |
 |---|---|---|---|---|---|---|
 | Best | <budget/cpl_low> | <rate_high>% | <leads×rate> | <ltv> | <customers×ltv> | <revenue/budget> |
 | Expected | <budget/cpl_mid> | <rate_mid>% | <leads×rate> | <ltv> | <customers×ltv> | <revenue/budget> |
 | Worst | <budget/cpl_high> | <rate_low>% | <leads×rate> | <ltv> | <customers×ltv> | <revenue/budget> |
-
 Breakeven: ~Day <calculated> (Expected case, based on LTV realization timeline)
 ```
 
@@ -359,13 +392,11 @@ Breakeven: ~Day <calculated> (Expected case, based on LTV realization timeline)
 ```
 REACH & IMPRESSION ESTIMATE — <product_name> — <timeline>
 Budget: <budget> | Estimated CPM: <cpm_estimate>
-
 | Scenario | Impressions | Reach (est.) | Frequency | CPM |
 |---|---|---|---|---|
 | Best | <budget/cpm_low×1000> | <reach_high> | <imp/reach> | <cpm_low> |
 | Expected | <budget/cpm_mid×1000> | <reach_mid> | <imp/reach> | <cpm_mid> |
 | Worst | <budget/cpm_high×1000> | <reach_low> | <imp/reach> | <cpm_high> |
-
 ⚠️ Awareness campaigns are measured by reach and frequency, not direct revenue.
 ```
 
@@ -373,21 +404,17 @@ Budget: <budget> | Estimated CPM: <cpm_estimate>
 
 ```
 APP INSTALL PROJECTION — <product_name> — <timeline>
-Budget: <budget> | CPI target: <cpi_mid>
-Estimated installs: <budget/cpi_mid> (expected)
-
+Budget: <budget> | CPI target: <cpi_mid> | Estimated installs: <budget/cpi_mid> (expected)
 | Scenario | Installs | D7 Retention | Active Users (D7) | In-App Revenue/User | Projected Revenue | ROAS |
 |---|---|---|---|---|---|---|
 | Best | <budget/cpi_low> | <retention_high>% | <installs×retention> | <arpu> | <active×arpu> | <revenue/budget> |
 | Expected | <budget/cpi_mid> | <retention_mid>% | <installs×retention> | <arpu> | <active×arpu> | <revenue/budget> |
 | Worst | <budget/cpi_high> | <retention_low>% | <installs×retention> | <arpu> | <active×arpu> | <revenue/budget> |
-
 Breakeven: ~Day <calculated> (Expected case, based on ARPU realization timeline)
 ⚠️ App installs require D7/D30 retention tracking. CPI alone does not indicate campaign success.
 ```
 
-⚠️ Note: Phase 1 typically runs at a loss; the goal is to buy audience data, not achieve positive ROI.
-⚠️ Figures are estimates based on industry benchmarks; actual results depend on creative quality and landing page.
+⚠️ Phase 1 typically runs at a loss (goal: buy audience data). Figures are estimates based on industry benchmarks; actual results depend on creative quality and landing page.
 
 ### 5H — A/B Test Roadmap
 
@@ -447,23 +474,7 @@ KILL CRITERIA (apply every week):
   Frequency > 3.0 → audience saturated, kill or expand.
 ```
 
-**IF Q2 = D (Ongoing):**
-
-```
-A/B TEST ROADMAP — <product_name> — Ongoing (rolling 30-day cycles)
-
-CYCLE 1 (Day 1–30): Same as Standard roadmap (Week 1–4 above).
-CYCLE 2 (Day 31–60):
-  Refresh creatives: new hooks based on Cycle 1 winner insights.
-  Build retargeting audiences from Cycle 1 data.
-  Test retargeting vs prospecting budget split (start 70/30 prospecting-heavy).
-CYCLE 3+ (Day 61+):
-  Monthly creative refresh. Scale winners from previous cycle.
-  Shift budget toward retargeting as audience data grows.
-  Review and update TA settings every 30 days based on Ads Manager data.
-
-KILL CRITERIA: Same as Standard. Additionally: Frequency > 3.0 within a cycle → refresh creative immediately.
-```
+**IF Q2 = D (Ongoing):** Use Standard roadmap for each 30-day cycle. Between cycles: refresh creatives from winner insights, build retargeting audiences, test retargeting vs prospecting split (start 70/30). Monthly creative refresh + TA review. Kill criteria: same as Standard + Frequency > 3.0 within a cycle → refresh immediately.
 
 ### 5I — Decision Tree
 
@@ -505,28 +516,13 @@ DECISION TREE — <product_name> — Standard
 | 21–30 | Scale | Winners identified | Scale + build retargeting audiences (Phase 2 prep) |
 ```
 
-**IF Q2 = D (Ongoing):**
-
-Use Standard decision tree for each 30-day cycle. At end of each cycle, add:
-
-```
-| Day 30 | Cycle review | — | Document winners. Refresh creatives. Update TA. Start next cycle. |
-```
+**IF Q2 = D (Ongoing):** Use Standard decision tree per 30-day cycle. Add row: `| Day 30 | Cycle review | — | Document winners. Refresh creatives. Update TA. Start next cycle. |`
 
 ---
 
-## 6. Strict Constraints
+## 6. Pre-Output Safety Check
 
-ALWAYS:
-- Flag assumptions with `⚠️ ASSUMPTION:` prefix wherever spec data is missing or vague.
-- Include an A/B test note for each variant pair.
-- Provide 3-angle reasoning for EVERY Tier 1 TA setting.
-- ONLY use budget figures provided by the user via Q2.
-- ONLY generate output after ALL Q1–Q4 answers are received.
-- ONLY generate campaign output IF Readiness Score ≥ 5.
-- ONLY let the user choose campaign objective via Q1; present all options, never pre-select.
-- ONLY generate Social Proof Hook IF the spec explicitly contains `existing_social_proof` data.
-- ONLY include detailed Production Notes IF Q3 ≠ B.
-- For health/beauty products, ALWAYS frame the Transformation Hook around Lifestyle Upgrades (confidence, lifestyle gains, enjoying activities) rather than physical body changes.
+Before sending Message 1, verify these two gates (not covered elsewhere):
+
 - IF product targets minors (< 18) → ASK user for confirmation before applying TA rules.
 - IF product category is sensitive (finance, health, politics) → ASK user for confirmation before setting targeting.

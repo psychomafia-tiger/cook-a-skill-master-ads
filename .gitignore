@@ -17,3 +17,6 @@ node_modules/
 # === ClawHub local cache ===
 .clawhub/
 .agent/
+
+feedback.md
+GPT_bug_check.md
