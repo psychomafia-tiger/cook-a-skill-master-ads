@@ -19,7 +19,7 @@ An **OpenClaw Skill** named **"Meta Ads Script & TA Generator"**.
 | `spec/spec.md` | Design spec — Supervisor Approved ✅ |
 | `CLAUDE.md` | This file — context reset anchor |
 | `README.md` | GitHub-facing documentation |
-| `CHANGELOG.md` | Project tracking + roadmap |
+| `logs/CHANGELOG.md` | Project tracking + roadmap |
 
 ---
 
@@ -240,7 +240,11 @@ Step 8: Post-Launch Playbook (always runs, never skipped)
 spec-build-for-master-ads/
 ├── SKILL.md              ← Runtime instructions (ClawHub reads this)
 ├── CLAUDE.md             ← Context reset anchor (this file)
-├── CHANGELOG.md          ← Project tracking + roadmap
+├── logs/
+│   ├── CHANGELOG.md       ← Project tracking + roadmap
+│   ├── debug_log.md       ← Debug sessions + fixes
+│   ├── testlog.md         ← Test results
+│   └── live_test_on_openclaw_internal.md ← Live deployment evidence
 ├── README.md             ← GitHub-facing documentation
 ├── LICENSE               ← MIT 2026
 ├── .gitignore
@@ -261,6 +265,9 @@ spec-build-for-master-ads/
 | `spec/spec.md` | Human only | — |
 | `CLAUDE.md` | Human only | — |
 | `README.md` | Claude may update when major changes occur | Human review before merge |
-| `CHANGELOG.md` | Claude updates after each work session | — |
+| `logs/CHANGELOG.md` | Claude updates after each work session | — |
+| `logs/debug_log.md` | Claude updates as bugs are found/fixed | — |
+| `logs/testlog.md` | Claude updates as tests are run | — |
+| `logs/live_test_on_openclaw_internal.md` | Claude updates with live test evidence | — |
 | `examples/` | Claude may create new files | Human review before merge |
 

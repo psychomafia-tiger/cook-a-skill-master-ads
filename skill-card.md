@@ -92,7 +92,7 @@ User answers Q1–Q4
    incomplete spec, awareness objective, app install, sprint timeline
 ```
 
-Evidence: [testlog.md](testlog.md) · [debug_log.md](debug_log.md)
+Evidence: [testlog.md](logs/testlog.md) · [debug_log.md](logs/debug_log.md)
 
 ---
 
