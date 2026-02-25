@@ -8,11 +8,38 @@
 
 **End goal:** Any Creative Producer or Media Buyer invokes the skill → gets ad scripts (3+ variants), TA settings with reasoning, budget plan, and a 30-day post-launch playbook — no follow-up questions needed.
 
-**Current stage:** Spec Approved ✅ · Architecture Documented ✅ · SKILL.md Complete ✅ · 10/10 Tests Passing ✅ · Deployed on OpenClaw VPS ✅ · **Pending: Skill Card · AI Showcase · BUG-14 Fix (Q enforce on OpenClaw)**
+**Current stage:** Spec Approved ✅ · Architecture Documented ✅ · SKILL.md Complete ✅ · 10/10 Tests Passing ✅ · Deployed on OpenClaw VPS ✅ · Debug Session 4 Complete ✅ (BUG-14/15 Fixed · SKILL.md Optimized · README Rewritten) · **Pending: Skill Card · AI Showcase**
 
 ---
 
 ## PART 2 — CHANGELOG
+
+### [v0.4.0] - 2026-02-25
+
+#### ✅ Bugs Fixed (Debug Session 4)
+
+| Bug | Fix | Root Cause | Fix Applied |
+|---|---|---|---|
+| BUG-14 | FIX-A | Agent defaulted to single-pass generation even on rich specs | 3-layer enforcement: CRITICAL INSTRUCTION block at top of file + Quick Start positive example + Common Mistakes negative reinforcement. STRICT RULE strengthened with ⛔ emoji + "non-negotiable" language |
+| BUG-15 | FIX-B | Single-block output caused wall-of-text + broken table rendering in chat UIs | Chunked 3-message delivery in Step 7: Message 1 (Scripts) → Message 2 (TA + Budget) → Message 3 (Playbook), each ending with a progress marker |
+
+#### 🛠 Improvements
+
+| Fix | Area | Description | Line Δ |
+|---|---|---|---|
+| FIX-C | Section 6 | Audited 12 rules — 10 were duplicates of Step constraints. Replaced entire section with "Pre-Output Safety Check" containing only 2 unique rules (minors <18, sensitive category) | −9 lines |
+| FIX-D | SKILL.md | Safe-group optimization: D1 (5H Ongoing inline), D3 (5I Ongoing inline), D5 (5E blank line), D6 (5F budget rules compact), D7 (YAML `requires.env` removed), D8 (5G code block blank lines + ⚠️ notes merged) | −40 lines |
+| FIX-E | README.md | Full restructure to conversion funnel order: Why → What → Example → Cost → Install → Usage → Format → Requirements → License. Added "Why This Skill Exists" with before/after time table, FOMO psychology (anchoring, loss aversion, pattern interrupt), and 5-model cost-per-run pricing table | +28 lines |
+
+**SKILL.md net result:** 533 → 528 lines (−5 net: +35 from FIX-A/B additions, −40 from FIX-C/D cuts)
+
+#### 💡 Decisions Made
+- 3-layer behavioral enforcement chosen for BUG-14 over single-rule approach — position + positive example + negative example cover all known LLM failure modes
+- Chunked 3-message delivery splits natural content boundaries (Scripts / TA+Budget / Playbook) rather than arbitrary line counts
+- FIX-D medium-risk cuts (D2: Revenue block merge; D4: Video 15s template compact) intentionally deferred — 28 lines over 500-line target accepted as tradeoff for FIX-A/B additions
+- README conversion funnel: Awareness (Why) → Interest (What It Does) → Desire (Example Output) → Conviction (Cost) → Action (Install) — matches standard reader journey for developer tools
+
+---
 
 ### [v0.3.0] - 2026-02-25
 
@@ -85,17 +112,25 @@
 
 | Task | Complexity | Status |
 |---|---|---|
-| Fix BUG-14: Agent skips Q1–Q4 gate on OpenClaw | Hard | 🔴 Pending |
 | Create `skill-card.md` (mandatory BGK deliverable) | Easy | 🔴 Pending |
 | Create `ai-showcase/` folder with 3–5 screenshots | Medium | 🔴 Pending |
+
+### ✅ Recently Completed
+
+| Task | Completed In | Notes |
+|---|---|---|
+| Fix BUG-14: Agent skips Q1–Q4 gate on OpenClaw | v0.4.0 FIX-A | 3-layer enforcement added — pending re-test on live OpenClaw |
+| Fix BUG-15: Wall-of-text output | v0.4.0 FIX-B | 3-message chunked delivery |
+| Consolidate duplicate constraints (Section 6) | v0.4.0 FIX-C | 12 rules → 2 unique |
+| Optimize SKILL.md size | v0.4.0 FIX-D | 533 → 528 lines (safe-group only) |
+| Rewrite README with FOMO psychology | v0.4.0 FIX-E | Conversion funnel structure |
 
 ### 🟡 Upcoming (Presentation Prep)
 
 | Task | Complexity | Depends On |
 |---|---|---|
-| Prepare real-data demo (internal product spec) | Medium | BUG-14 fixed |
-| Compact SKILL.md: extract templates → `references/output-templates.md` | Medium | — |
-| Consolidate duplicate constraints (Step 3 vs Section 6) | Easy | — |
+| Re-test BUG-14 fix on live OpenClaw deployment | Easy | BUG-14 fix deployed |
+| Prepare real-data demo (internal product spec) | Medium | BUG-14 re-tested |
 | Submit Skill Card + AI Showcase before presenting | Easy | Both ready |
 | Present to Judge: introduce skill, live demo, Q&A | Medium | All above done |
 
