@@ -1,6 +1,6 @@
 ---
 name: "Meta Ads Script & TA Generator"
-version: "1.0"
+version: "1.0.0"
 description: "Takes a product spec .md file → asks clarifying questions → generates a complete Meta Ads campaign package (ad scripts + TA settings + budget plan + post-launch playbook) in 1 markdown block."
 author: "Tiger"
 homepage: "https://github.com/psychomafia-tiger/cook-a-skill-master-ads"

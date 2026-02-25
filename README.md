@@ -31,19 +31,17 @@ See [examples/output-sample.md](examples/output-sample.md) for a full generated 
 
 ## What It Costs Per Run
 
-| Model | Input cost | Output cost | Total |
-|-------|-----------|-------------|-------|
-| Gemini 3 Flash | $0.0228 | $0.0042 | **$0.027** |
-| GPT-5.2 Instant | $0.0798 | $0.0196 | **$0.099** |
-| Gemini 3.1 Pro | $0.0912 | $0.0168 | **$0.108** |
-| Claude 4.6 Sonnet | $0.1368 | $0.0210 | **$0.158** |
-| Claude 4.6 Opus | $0.2280 | $0.0350 | **$0.263** |
+| Model | Input (~45.6k tok) | Output (~1.4k tok) | Total |
+|---|---|---|---|
+| Gemini 3 Flash | $0.023 | $0.004 | **$0.03** |
+| GPT-5.2 Instant | $0.080 | $0.020 | **$0.10** |
+| Gemini 3.1 Pro | $0.091 | $0.017 | **$0.11** |
+| Claude 4.6 Sonnet | $0.137 | $0.021 | **$0.16** *(recommended)* |
+| Claude 4.6 Opus | $0.228 | $0.035 | **$0.26** |
 
-*Token breakdown per run: ~45,000 input tokens (SKILL.md runtime) + ~600 tokens (product spec) + ~1,400 output tokens. Prices as of Feb 2026.*
+*Token counts measured during internal deployment on OpenClaw VPS. Input = ~45,000 tokens (SKILL.md context) + ~600 tokens (product spec). Output = ~1,400 tokens. API pricing as of Feb 2026.*
 
-For context: a freelance Media Buyer charges $500–$2,000 for the same scope of work. This skill runs unlimited times for the cost of a single API call.
-
-Every campaign you plan manually is time you can't get back.
+For context: a freelance Media Buyer charges **$500–$2,000** for the same scope. Every campaign you plan manually is time you can't get back.
 
 ## Installation
 

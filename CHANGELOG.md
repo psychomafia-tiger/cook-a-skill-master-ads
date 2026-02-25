@@ -8,11 +8,33 @@
 
 **End goal:** Any Creative Producer or Media Buyer invokes the skill → gets ad scripts (3+ variants), TA settings with reasoning, budget plan, and a 30-day post-launch playbook — no follow-up questions needed.
 
-**Current stage:** Spec Approved ✅ · Architecture Documented ✅ · SKILL.md Complete ✅ · 10/10 Tests Passing ✅ · Deployed on OpenClaw VPS ✅ · Debug Session 4 Complete ✅ (BUG-14/15 Fixed · SKILL.md Optimized · README Rewritten) · **Pending: Skill Card · AI Showcase**
+**Current stage:** Spec Approved ✅ · Architecture Documented ✅ · SKILL.md Complete ✅ · 10/10 Tests Passing ✅ · Deployed on OpenClaw VPS ✅ · Debug Session 4 Complete ✅ · Live Test Session Complete ✅ (BUG-14 Closed · Gate C Closed) · Skill Card Created ✅ · **Pending: BUG-15 VPS Re-deploy · AI Showcase**
 
 ---
 
 ## PART 2 — CHANGELOG
+
+### [v0.5.0] - 2026-02-25
+
+#### ✅ Added
+- `skill-card.md` — Mandatory BGK deliverable created. Sections: Problem, Before/After, What Gets Generated, What Makes This Different, How It Works, Quality Engineering, Input Requirements, Tools & AI Used, Limitations, Cost Per Run, Roadmap, Quick Start.
+
+#### 🛠 Updated
+- `skill-card.md` — Post-review fixes (P1/P2 issues): line count corrected (252→251), "0 revisions" softened to "Minimal — structured template", A/B roadmap labelled "timeline-adaptive: Sprint / Standard / Ongoing" (not "4-week plan"), Q3=C exception noted in Message 2 table. Cost table expanded with Input/Output columns + token methodology note. Proof links added to Quality Engineering section.
+- `README.md` — Cost table expanded with Input/Output columns + token methodology note (mirrors skill-card.md).
+- `SKILL.md` — Version bumped `"1.0"` → `"1.0.0"`.
+- `live_test_on_openclaw_internal.md` — Test 2 (Ai Lipstick Spark App) documented: BUG-14 ✅, Gate C ✅, BUG-15 regression 🔴 noted.
+
+#### 🧪 Live Test Results (OpenClaw VPS)
+- **BUG-14: ✅ PASS** — Q1–Q4 gate confirmed on both SaaS (NovaFlow AI) and Beauty App (Ai Lipstick Spark App). Q4 domain-aware reframing observed as bonus behavior.
+- **BUG-15: 🔴 Regression** — Wall of text still present on VPS (running pre-fix SKILL.md). Re-deployment pending.
+- **Gate C: ✅ PASS** — Lifestyle Upgrade framing confirmed in beauty product output.
+
+#### 💡 Decisions Made
+- skill-card.md cost table uses 4-column format (Model / Input / Output / Total) with methodology note — provides verifiable evidence for BGK, not just a number.
+- Token counts sourced from actual VPS deployment measurement (not estimate): 45k input (SKILL.md context) + 600 (spec) + 1,400 output.
+
+---
 
 ### [v0.4.0] - 2026-02-25
 
@@ -112,25 +134,29 @@
 
 | Task | Complexity | Status |
 |---|---|---|
-| Create `skill-card.md` (mandatory BGK deliverable) | Easy | 🔴 Pending |
+| Re-deploy patched SKILL.md to VPS → re-test BUG-15 | Easy | 🔴 Pending |
 | Create `ai-showcase/` folder with 3–5 screenshots | Medium | 🔴 Pending |
 
 ### ✅ Recently Completed
 
 | Task | Completed In | Notes |
 |---|---|---|
-| Fix BUG-14: Agent skips Q1–Q4 gate on OpenClaw | v0.4.0 FIX-A | 3-layer enforcement added — pending re-test on live OpenClaw |
-| Fix BUG-15: Wall-of-text output | v0.4.0 FIX-B | 3-message chunked delivery |
+| Create `skill-card.md` (mandatory BGK deliverable) | v0.5.0 | Created + reviewed + overclaim fixes applied |
+| BUG-14 live verified — PASS | v0.5.0 Live Test | Confirmed on SaaS + Beauty App product types |
+| Gate C live verified — PASS | v0.5.0 Live Test | Lifestyle Upgrade framing confirmed on beauty output |
+| Cost table methodology added (skill-card + README) | v0.5.0 | Token counts from real VPS measurement |
+| Fix BUG-14: Agent skips Q1–Q4 gate on OpenClaw | v0.4.0 FIX-A | 3-layer enforcement |
+| Fix BUG-15: Wall-of-text output | v0.4.0 FIX-B | 3-message chunked delivery — awaiting VPS re-deploy |
 | Consolidate duplicate constraints (Section 6) | v0.4.0 FIX-C | 12 rules → 2 unique |
-| Optimize SKILL.md size | v0.4.0 FIX-D | 533 → 528 lines (safe-group only) |
+| Optimize SKILL.md size | v0.4.0 FIX-D | 533 → 528 lines |
 | Rewrite README with FOMO psychology | v0.4.0 FIX-E | Conversion funnel structure |
 
 ### 🟡 Upcoming (Presentation Prep)
 
 | Task | Complexity | Depends On |
 |---|---|---|
-| Re-test BUG-14 fix on live OpenClaw deployment | Easy | BUG-14 fix deployed |
-| Prepare real-data demo (internal product spec) | Medium | BUG-14 re-tested |
+| Re-deploy SKILL.md to VPS → verify BUG-15 fix live | Easy | — |
+| Prepare real-data demo (internal product spec) | Medium | BUG-15 re-tested |
 | Submit Skill Card + AI Showcase before presenting | Easy | Both ready |
 | Present to Judge: introduce skill, live demo, Q&A | Medium | All above done |
 

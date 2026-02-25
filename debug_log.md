@@ -409,3 +409,57 @@ Deployment method: Manual copy via folder transfer to OpenClaw running locally o
 | FIX-C | SKILL.md | Line 120 (updated) | Removed orphaned "per Section 6" reference |
 | FIX-D | SKILL.md | YAML, 5H, 5I, 5E, 5F, 5G | Safe-group compaction: -40 lines (568 → 528) |
 | FIX-E | README.md | Lines 5–33 (new) | "Why This Skill Exists" section: before/after table + cost table + FOMO framing |
+
+---
+
+## 📅 [2026-02-25] Live Test Verification — OpenClaw VPS
+
+### Context
+
+Live deployment tests after Debug Session 4 fixes were applied. Conducted via **Telegram bot interface** on internal VPS. Two specs tested across different product categories.
+
+Evidence: `screenshot_test_openclaw_skill/` · `live_test_on_openclaw_internal.md`
+
+---
+
+### ✅ BUG-14 — Live Verification: PASS (Confirmed across 2 product types)
+
+**Test 1 — NovaFlow AI (SaaS, fictional, `input-sample-ai.md`):**
+- Agent asked Q1–Q4 in one message and STOPPED. No premature output. ✅
+
+**Test 2 — Ai Lipstick Spark App (Beauty App, real internal spec, `spec_lipstick_ai_product.md`, 2.9 KB):**
+- BUG-14 holds on a different product category. ✅
+- Agent correctly extracted product name + market from spec before asking Q1–Q4.
+- **Bonus observation — Q4 domain-aware reframing:** Agent adapted Q4 to *"Team có thể quay video người thật (UGC/Creator) hay chỉ làm motion/MGUK không?"* — not the generic template phrasing. Contextual adaptation working beyond spec.
+
+**Conclusion:** 3-layer enforcement (CRITICAL INSTRUCTION + Quick Start example + Common Mistakes) is robust. BUG-14 officially closed on live.
+
+---
+
+### 🔴 BUG-15 — Live Regression: STILL PRESENT ON VPS
+
+**Test 1 + Test 2 — Both specs:**
+- Full campaign package delivered in one monolithic message. Tables rendered as raw pipe characters. Wall-of-text UX confirmed on both runs.
+- Screenshot evidence: `ss2-openclaw-test-output-2.png`
+
+**Root cause of regression:** BUG-15 fix (FIX-B, v0.4.0) was applied to local SKILL.md but **VPS was not re-deployed** with the patched file. VPS still running pre-fix version.
+
+**Status:** 🔴 Fix exists in repo — pending VPS re-deployment + re-test.
+
+---
+
+### ✅ Gate C — Live Verification: PASS (Beauty product)
+
+**Test 2 — Ai Lipstick Spark App:**
+- Transformation Hook in generated output uses lifestyle/confidence framing. No before/after body imagery detected. Meta policy compliance confirmed.
+
+---
+
+### Live Test — Findings Summary
+
+| Item | Result | Status |
+|---|---|---|
+| BUG-14 — SaaS (Test 1) | Q1–Q4 gate holds | ✅ Closed |
+| BUG-14 — Beauty App (Test 2) | Q1–Q4 gate holds, Q4 domain-aware | ✅ Closed |
+| BUG-15 — Both tests | Wall of text persists on VPS (pre-fix) | 🔴 Re-deploy needed |
+| Gate C — Beauty App | Lifestyle Upgrade framing confirmed | ✅ Closed |

@@ -141,10 +141,11 @@ Evidence: [testlog.md](testlog.md) · [debug_log.md](debug_log.md)
 |---|---|---|---|
 | Gemini 3 Flash | $0.023 | $0.004 | **$0.03** |
 | GPT-5.2 Instant | $0.080 | $0.020 | **$0.10** |
+| Gemini 3.1 Pro | $0.091 | $0.017 | **$0.11** |
 | Claude 4.6 Sonnet | $0.137 | $0.021 | **$0.16** *(recommended)* |
 | Claude 4.6 Opus | $0.228 | $0.035 | **$0.26** |
 
-*Input = ~45,000 tokens (SKILL.md) + ~600 tokens (product spec). Output = ~1,400 tokens. Prices as of Feb 2026.*
+*Token counts measured during internal deployment on OpenClaw VPS (direct install, not via ClawHub). Input = ~45,000 tokens (SKILL.md context) + ~600 tokens (product spec). Output = ~1,400 tokens. API pricing as of Feb 2026.*
 
 A freelance Media Buyer charges **$500–$2,000** for the same scope.
 
@@ -154,7 +155,7 @@ A freelance Media Buyer charges **$500–$2,000** for the same scope.
 
 | Phase | What | Status |
 |---|---|---|
-| ✅ Phase 1 | Core skill: scripts + TA + budget + playbook | **Shipped** |
+| ✅ Phase 1 | Core skill: scripts + TA + budget + playbook | **Deployed (internal)** |
 | 🔜 Phase 2 | Retargeting campaign module | Planned |
 | 🔜 Phase 3 | Meta Ads Manager API integration | Planned |
 | 🔜 Phase 4 | Multi-language + regional CPA benchmarks | Planned |
