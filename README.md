@@ -167,12 +167,12 @@ This skill is **Agent Layer 2** of a planned multi-agent autonomous advertising 
 
 | Layer | Agent | Status | Output |
 |-------|-------|--------|--------|
-| **1** | Spec Writer | 🔄 Q2 2026 | Automated product spec from voice/text |
+| **1** | Spec Writer | 🔄 Planned | Automated product spec from voice/text |
 | **2** | Campaign Planner | ✅ MVP Live | Campaign brief (scripts, TA, budget, playbook) |
-| **3A** | Image Generator | 🔄 Q3 2026 | AI-generated ad visuals (3 variants/hook) |
-| **3B** | Video Generator | 🔄 Q3 2026 | AI-generated video ads (2 variants/hook) |
-| **4** | Campaign Executor | 🔄 Q2 2026 | Automated Meta Ads setup + launch |
-| **5** | Performance Monitor | 🔄 Q3 2026 | Daily reporting + auto-optimization loop |
+| **3A** | Image Generator | 🔄 Planned | AI-generated ad visuals (3 variants/hook) |
+| **3B** | Video Generator | 🔄 Planned | AI-generated video ads (2 variants/hook) |
+| **4** | Campaign Executor | 🔄 Planned | Automated Meta Ads setup + launch |
+| **5** | Performance Monitor | 🔄 Planned | Daily reporting + auto-optimization loop |
 
 ### Multi-Platform Expansion Roadmap
 
@@ -182,14 +182,14 @@ Phase 1: Meta Ads Only (Current)
 ├── Instagram Ads
 └── Audience Network
 
-Phase 2: Google & Social [Q3 2026]
+Phase 2: Google & Social
 ├── Google Search Ads
 ├── Google Display Network
 ├── YouTube Ads
 ├── TikTok Ads
 └── TikTok Shop
 
-Phase 3: Premium Channels [Q4 2026]
+Phase 3: Premium Channels
 ├── Pinterest Ads
 ├── LinkedIn Ads
 ├── Amazon DSP
@@ -203,9 +203,9 @@ For each new platform, the ecosystem scales horizontally:
 ```
 AGENT 2 (Campaign Planner)
     ├─ Meta Ads version (current)
-    ├─ Google Ads version (Q3)
-    ├─ TikTok Ads version (Q3)
-    └─ Pinterest Ads version (Q4)
+    ├─ Google Ads version
+    ├─ TikTok Ads version
+    └─ Pinterest Ads version
        ↓ All feed into ↓
 AGENT 4 (Campaign Executor)
     ├─ Meta Ads Executor
